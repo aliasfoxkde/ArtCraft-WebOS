@@ -1,0 +1,52 @@
+[
+  {
+    "id": "slide-1",
+    "image": "/slides/slide-1.jpg",
+    "title": "Handmade with Love",
+    "subtitle": "Discover unique amigurumi and custom crafts, each piece crafted with care and attention to detail",
+    "ctaText": "Shop the Collection",
+    "ctaLink": "/products",
+    "order": 1,
+    "isVideo": false
+  },
+  {
+    "id": "slide-2",
+    "image": "/slides/slide-2.jpg",
+    "title": "Custom Creations",
+    "subtitle": "Want something special? Commission your own custom piece tailored to your vision",
+    "ctaText": "Request Custom Work",
+    "ctaLink": "/contact",
+    "order": 2,
+    "isVideo": false
+  },
+  {
+    "id": "slide-3",
+    "image": "/slides/slide-3.jpg",
+    "title": "Perfect Gifts",
+    "subtitle": "Find the perfect handmade gift for birthdays, holidays, or just because",
+    "ctaText": "Explore Gifts",
+    "ctaLink": "/products",
+    "order": 3,
+    "isVideo": false
+  },
+  {
+    "id": "slide-4",
+    "image": "/slides/slide-4.jpg",
+    "title": "Seasonal Specials",
+    "subtitle": "Discover our seasonal collection featuring holiday-themed crafts and limited editions",
+    "ctaText": "View Seasonal Items",
+    "ctaLink": "/products",
+    "order": 4,
+    "isVideo": false
+  },
+  {
+    "id": "slide-5",
+    "image": "/slides/slide-5.jpg",
+    "title": "Join Our Community",
+    "subtitle": "Follow us for behind-the-scenes content, new releases, and exclusive discounts",
+    "ctaText": "Follow Along",
+    "ctaLink": "/contact",
+    "order": 5,
+    "isVideo": false
+  }
+]
