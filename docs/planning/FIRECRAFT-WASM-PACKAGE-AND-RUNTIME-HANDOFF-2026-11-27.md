@@ -80,6 +80,8 @@ The current WebOS host has special FireCraft integration in webos/src/shell/Embe
 
 The generic WebOS file-storage bridge in webos/src/os/bridge.js already has a useful security foundation: app-scoped /Apps/<app-id>/ paths, path traversal rejection, a 64 MiB file-save bound, typed list/open/save/delete operations, request IDs and timeouts.
 
+The current iframe element in EmbedFrame.jsx does not set a sandbox attribute. Remote third-party apps are at least separated by origin, but they still run without a restrictive frame sandbox. Do not apply one blanket policy to every existing external app without compatibility testing; define per-source runtime policies. A verified local WASM package must have a mandatory restricted sandbox and must not share the WebOS shell origin.
+
 However, the inspected current FireCraft experiment main source does not contain the historic ready/applied/openDocument/exportDocument/exportPng bridge implementation. A current versioned FireCraft host client must be implemented in the FireCraft repository, with shared contract fixtures and an independent WebOS host implementation.
 
 ---
