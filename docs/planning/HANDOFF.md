@@ -35,14 +35,15 @@ you complete them.
 4. `docs/planning/QUALITY-PROGRAM.md` — the quality program record: what
    was fixed, what was triaged, what is deliberately closed.
 5. `docs/planning/FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md` — FireCraft local package, sandbox, host protocol, update and rollback plan.
-5. `docs/planning/HISTORY.md`, `SESSIONS.md`, `PROGRESS.md` — what shipped,
+6. `docs/planning/HISTORY.md`, `SESSIONS.md`, `PROGRESS.md` — what shipped,
    what happened, where things stand.
 
 ## Ground rules (non-negotiable)
 
-- **Gates before every commit**: from `webos/`, `npm run ci` = lint
-  (zero warnings) → coverage (ratchet floors) → build. A red gate is a
-  stop, not a note.
+- **Gates before every commit**: from `webos/`, `npm run ci` currently runs
+  lint (zero warnings) → coverage (ratchet floors) → build. It is not the
+  complete hosted CI gate: Aegis, ShellCheck, docs/contrast and browser sweep
+  must also pass. Tag release must run the same exact-SHA quality suite.
 - **Ratchets only go up** (coverage floors, lint rules). Never lower one
   to make a change pass — fix the change.
 - **A measured metric must be reproducible.** A coverage number that
