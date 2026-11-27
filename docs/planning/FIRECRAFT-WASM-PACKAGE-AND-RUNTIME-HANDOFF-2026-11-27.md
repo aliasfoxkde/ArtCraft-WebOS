@@ -133,7 +133,7 @@ For the future locally cached, sandboxed package:
 
 ## 4. Target package architecture
 
-\`\`\`
+```
 FireCraft GitHub Release
   firecraft-vX.Y.Z-wasm32-web.zip
   PACKAGE-MANIFEST.json / WEBOS-PACKAGE.json
@@ -172,7 +172,7 @@ WebOS Host APIs
               |
               v
 Automatic health check / switch / rollback
-\`\`\`
+```
 
 The package loader must not compile or rebuild FireCraft. It downloads a release artifact produced and validated by FireCraft CI.
 
