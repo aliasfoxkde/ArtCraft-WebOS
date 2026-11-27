@@ -311,7 +311,7 @@ source commit unverified — the bundle carries no version string).
       EACCES otherwise). Prefer copying the repo to /var/tmp instead of
       mounting the NAS path when practical.
 
-## Phase H6 — release checklist (next: TBD; last release 3.22.1, 2026-10-25)
+## Phase H6 — release checklist (next: TBD; latest observed release v3.25.0, published 2026-11-03)
 
 1. [ ] Pick the version (user-facing change → minor; fix-only → patch).
 2. [ ] Bump ×3 (`package.json`, `src/version.js`, `public/sw.js`).
@@ -330,6 +330,68 @@ source commit unverified — the bundle carries no version string).
        possible — use the probe pattern with the prod URL).
 9. [ ] Update PROGRESS.md snapshot + HISTORY.md rows + SESSIONS.md entry;
        final commit + push.
+
+## Phase H8 — secure FireCraft iframe and protocol hardening
+
+Plan of record: [FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md](FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md).
+
+- [ ] H8.1 Fix the current FireCraft-specific iframe message path: validate event.source AND exact expected event.origin; bind replies to the exact expected source and origin; do not send document bytes with wildcard target origin.
+- [ ] H8.2 Add a browser regression where the FireCraft iframe navigates cross-origin and sends forged ready/applied/export messages. Assert no fileGet/restore/export or private document bytes are delivered.
+- [ ] H8.3 Revoke pending requests, listeners and app capabilities on navigation, load, reload, unmount, uninstall and permission changes.
+- [ ] H8.4 Unify the old FireCraft control messages and webos:file-* storage operations under one versioned host protocol and capability broker. Preserve the app-specific /Apps/<app-id>/ path boundary.
+- [ ] H8.5 Make FireCraft autosave/recovery failures visible; test delayed export, storage rejection, concurrent windows, frame destruction, retry and restore schema.
+- [ ] H8.6 Write the opaque-origin/sandbox bootstrap ADR. Prototype MessageChannel transfer with one-use nonce and channel revocation; do not add allow-same-origin for convenience.
+
+**Exit:** a hostile cross-origin frame cannot trigger autosave restore or receive stored document bytes; all origin, navigation, stale-channel and lifecycle tests pass.
+
+## Phase H9 — verified app package catalog and FireCraft manifest
+
+- [ ] H9.1 Define a JSON schema for app packages and stable/nightly channel pointers: app ID, version, tag, source SHA, asset inventory/digests, manifest, host API range, capabilities, document schema and minimum WebOS version.
+- [ ] H9.2 Add an allowlisted GitHub Release resolver. It accepts immutable tags/assets only; a moving latest/download URL is not an install identity.
+- [ ] H9.3 Validate SHA-256, release provenance/attestation, archive inventory, expected MIME types, path traversal, symlink/duplicate/case-collision, decompression size and file-count limits before activation.
+- [ ] H9.4 Extend registry source types to remote-url, verified-wasm and bundled-web. Keep external/remote app behavior intact.
+- [ ] H9.5 Replace duplicated FireCraft version strings in registry.js, fetch-apps.sh and pwa-inject.sh with one generated/catalog descriptor and test against a checked-in manifest fixture.
+- [ ] H9.6 Reconcile the stale 0.2.3 pin with upstream FireCraft v0.3.2. Adopt v0.3.2 only after package/API compatibility and sandbox smoke pass; keep the old install available for rollback.
+- [ ] H9.7 Retain release/package verification receipts per app version and include source SHA, asset digest, release tag, runtime ABI and verification timestamp in the app details UI.
+
+**Exit:** the resolver downloads a complete, versioned FireCraft package from GitHub Releases and rejects a tampered, stale, incompatible or untrusted package.
+
+## Phase H10 — isolated local WASM application runtime
+
+- [ ] H10.1 Prototype sandboxed frame loading with scripts enabled and no same-origin shell access; test blob URL, CacheStorage and OPFS-backed package serving approaches before choosing one.
+- [ ] H10.2 Confirm WASM, wasm-bindgen JS glue, relative asset paths, WebGL2 and renderer initialization under the selected CSP/sandbox on Chromium, Firefox and WebKit.
+- [ ] H10.3 Implement one-use MessageChannel host bootstrap with session nonce, negotiated protocol version and capability allowlist.
+- [ ] H10.4 Expose only host-mediated APIs: app-private storage, user-selected file open/save/export, clipboard, notifications and lifecycle/window actions as separately granted capabilities.
+- [ ] H10.5 Add per-app crash isolation, quotas, cancellation, timeouts, worker/port/listener cleanup and clear error UX.
+- [ ] H10.6 Assert the package cannot access WebOS DOM, globals, localStorage, shell IndexedDB, other app folders or host secrets.
+
+**Exit:** a verified local FireCraft WASM package runs in an isolated frame with typed host APIs while the standalone web app and existing remote-url apps still work.
+
+## Phase H11 — local install, stable/nightly channels and rollback
+
+- [ ] H11.1 Implement immutable content-addressed package storage and atomic activation only after hash, provenance, ABI and startup health checks pass.
+- [ ] H11.2 Keep current and previous known-good packages. Separate executable package storage from user documents, recovery snapshots and app settings.
+- [ ] H11.3 Implement stable by default, explicit nightly opt-in, later beta only if justified, version pinning and return-to-stable.
+- [ ] H11.4 Implement offline rollback to previous known-good version and user-selected downgrade without deleting data.
+- [ ] H11.5 Keep feature-level Experimental flags individually disabled by default; nightly enrollment must not enable them.
+- [ ] H11.6 Test interrupted download, GitHub/API outage, bad checksum, wrong tag, invalid ZIP, wrong host ABI, quota exhaustion, failed startup, corrupt cache, offline restore and upgrade/downgrade schema compatibility.
+- [ ] H11.7 Notify the user of available version, release notes, package source SHA, channel, verification state and rollback outcome.
+
+**Exit:** WebOS can install, update, pin and roll back FireCraft without requiring firecraft-web.pages.dev and without losing user documents.
+
+## Phase H12 — release quality equivalence and integration E2E
+
+- [ ] H12.1 Extract a reusable quality workflow. Both PR CI and tag release must run the same exact-SHA lint, coverage, Aegis, ShellCheck, docs/contrast, build and browser test gates.
+- [ ] H12.2 Add merge_group required-check support. Ensure release publication waits for every mandatory result; skipped jobs are not passed jobs.
+- [ ] H12.3 Split quality, artifact build, GitHub Release and Pages deployment jobs with least-privilege permissions; only the publish job may write releases and only deploy job gets Cloudflare credentials.
+- [ ] H12.4 Fix Files nested interactive buttons, act environment warnings and any async tasks continuing after iframe/window unmount. Fail tests on unexpected React DOM warnings and uncaught errors.
+- [ ] H12.5 Replace required public FireCraft deployment probes with a local deterministic package fixture; keep live external URL smoke informational/separate.
+- [ ] H12.6 Add package install/launch/open/save/export/restart/update/rollback phases to webos-sweep.mjs and retain the existing shell/app regression phases.
+- [ ] H12.7 Add exact-SHA package manifests, SBOM/provenance receipts and install/rollback telemetry with explicit privacy boundaries.
+- [ ] H12.8 Update docs/development/quality.md, docs/development/release.md, app catalog docs, host API reference, security model, user channel guide, PROGRESS.md, PHASES.md and HISTORY.md.
+
+**Exit:** a release cannot bypass any PR quality gate; a complete local FireCraft package integration journey passes and a failure-injected rollback restores last-known-good.
+
 
 ## Known pitfalls (all encountered for real)
 
