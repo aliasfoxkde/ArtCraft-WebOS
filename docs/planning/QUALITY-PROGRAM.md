@@ -389,3 +389,48 @@ labels, UI copy) and these are not actual PII.
 Repo hygiene: no backup/versioned/junk files, no TODO/FIXME/HACK markers in
 shipped code, build artifacts and sibling repos gitignored. Aegis CLI is the
 local scanner.
+
+
+---
+
+## 2026-11-27 re-audit — CI equivalence, React warnings and FireCraft package trust
+
+**Inspected main source SHA:** d08d2d11f6c546cf94f786f8f409b846a0549c60  
+**Latest inspected successful main CI run:** 45096495247 (2026-11-23)  
+**Run result:** 95 Vitest files passed, 1,475 tests passed, and the browser sweep reported 31/31 phases green. The CI job also completed its lint, coverage, build, contrast/docs, Aegis and ShellCheck stages.
+
+This addendum supplements, and does not overwrite, the dated coverage/security baselines above. It is not a fresh 2026-11-27 CI execution.
+
+### Findings
+
+| Priority | Finding | Required quality action |
+|---|---|---|
+| P1 | Release workflow reruns lint, coverage and build but omits Aegis, ShellCheck, docs/contrast and the E2E sweep that run in PR CI. | Extract reusable exact-SHA quality workflow; invoke it before tag publication and Pages deployment. |
+| P1 | FireCraft special iframe messages are accepted after checking source WindowProxy and a source string, without validating event.origin. postToApp also uses wildcard target origin. | Bind origin on current remote path; design opaque-origin-safe MessageChannel capability bootstrap for sandboxed package path. Add forged-ready/data-disclosure tests. |
+| P1 | FireCraft is still pinned at 0.2.3 while the upstream FireCraft repository has published v0.3.2. The current test only checks internal literal equality across three WebOS files. | Move to catalog descriptor + immutable release manifest/digest validation. Do not update the version pin until host API/package compatibility is tested. |
+| P1 | External FireCraft sweep checks can be skipped when the public FireCraft site is unreachable. | Required integration tests must use a local package fixture; retain live deployed-site probe as optional/informational. |
+| P2 | React DOM-nesting warnings are visible during Files tests; Files tiles contain buttons nested inside buttons. | Fix semantics/keyboard behavior and fail on unexpected React warnings. |
+| P2 | Testing Library act warnings and async-task-after-frame-destroyed diagnostics appear in test logs. | Correct test environment and await/abort/cancel async work on unmount; assert cleanup. |
+| P2 | npm run ci omits several hosted gates. | Add explicit ci:quick and ci:full; full/release must fail closed and match CI requirements. |
+
+### Release integrity policy
+
+1. Pull-request and tag-release verification must share the same required workflow/job identity and exact source SHA.
+2. Add merge_group handling before requiring GitHub merge queues.
+3. Separate test/build/release/Pages deployment jobs and grant each the minimum required permissions. Cloudflare deploy credentials and contents: write must not be present in the general test job.
+4. A skipped required job is not a pass. Do not publish when the workflow, scan, browser sweep or artifact provenance is missing.
+5. Keep coverage ratchets. Do not lower any metric to accommodate package-runtime changes.
+6. Retain current Aegis baseline triage, but review the baseline on meaningful security/runtime changes and record any new accepted finding with expiry.
+
+### FireCraft package/runtime test policy
+
+The WebOS package manager is a new security boundary. Before it can launch a local FireCraft package, test:
+- archive traversal, duplicate/case-colliding paths, symlinks, decompression bombs, package size limits and hash mismatch;
+- manifest schema/host API incompatibility and stale channel generation;
+- sandbox cannot access shell globals, shell IndexedDB or other app roots;
+- hostile frame navigation cannot forge a ready message or receive restored document bytes;
+- MessageChannel timeout, cancellation, duplicate request IDs, reload/unmount and revocation;
+- save/open/export/autosave/recovery, quota exhaustion, corrupted data and offline operation;
+- stable/nightly switching, pin, explicit downgrade, failed startup and last-known-good rollback.
+
+The complete test matrix and execution order are in [FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md](FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md).
