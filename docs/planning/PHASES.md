@@ -484,6 +484,18 @@ land, not retro-hunting these arms.
 | 189 | Repair the broken Aegis CI gate | P3 | completed |
 | 190 | Dependency refresh | P4 | completed (majors deferred with reasons) |
 | 191 | Adopt upstream craft app releases | P10 | completed (2026-10-22) |
+| 192 | Fix FireCraft iframe origin/navigation trust boundary | H8 | planned |
+| 193 | Version unified app host protocol and capability broker | H8 | planned |
+| 194 | Define verified WASM package and channel manifest schemas | H9 | planned |
+| 195 | Replace hardcoded FireCraft version literals with catalog source descriptor | H9 | planned |
+| 196 | Add GitHub release resolver, package hash/provenance and archive validation | H9 | planned |
+| 197 | Prototype isolated sandboxed WASM runtime and MessageChannel bridge | H10 | planned |
+| 198 | Add local app package install/cache/atomic activation | H11 | planned |
+| 199 | Add stable/nightly selection, version pin, downgrade and offline rollback | H11 | planned |
+| 200 | Fix nested Files buttons and fail on unexpected test warnings | H12 | planned |
+| 201 | Reuse full quality workflow for release; add merge_group and least-privilege jobs | H12 | planned |
+| 202 | Replace external FireCraft E2E dependency with deterministic local package fixture | H12 | planned |
+| 203 | Add package install/update/rollback phases to WebOS browser sweep | H12 | planned |
 
 ## Phase P13 — Screen Capture Suite (2026-11-01, not started)
 
@@ -543,3 +555,27 @@ unmount), sweep phase for scene composition, Aegis re-scan.
 ARCHITECTURE.md app-table rows, registry rows, H6 release checklist
 (minor bump — new user-facing features).
 
+
+---
+
+## Phase P14 — Verified local WASM app packages and secure runtime
+
+**Status:** planned (2026-11-27)  
+**Plan of record:** [FireCraft WASM Package Runtime Handoff](FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md)  
+**Related FireCraft work:** separate repository; no FireCraft editor source is copied into WebOS.
+
+Goal: let WebOS install and run a complete WASM app package downloaded directly from an immutable GitHub Release, with integrity/provenance verification, sandboxed execution, capability-scoped host APIs, stable/nightly channels and offline rollback.
+
+Dependencies and milestones:
+
+1. Fix the current FireCraft iframe origin/navigation trust issue before any local package execution.
+2. Define one versioned host protocol; consolidate the legacy FireCraft control messages and generic file bridge into typed capability-scoped operations.
+3. Define package/channel manifests and an allowlisted GitHub Release resolver; replace duplicated hardcoded app version strings with generated/catalog descriptors.
+4. Prototype sandboxed package loading without same-origin access. Test MessageChannel bootstrap, CSP, wasm-bindgen asset loading, WebGL2 and frame lifecycle across Chromium, Firefox and WebKit.
+5. Install immutable packages in content-addressed cache; keep current and previous known-good versions and separate executable bytes from user documents/settings.
+6. Add explicit stable/nightly selection, version pinning, downgrade, offline rollback and per-feature Experimental flags disabled by default.
+7. Refactor tag release so it runs the complete reusable exact-SHA quality workflow, including Aegis, ShellCheck, contrast/docs and browser sweep; support merge_group checks.
+8. Add deterministic local FireCraft package fixtures to required E2E. Live external-site probes remain separate/informational and can never count as required local package coverage.
+9. Fix test warnings/invalid DOM and add failure injection for package tampering, hostile navigation, update interruption, quota exhaustion and startup rollback.
+
+**Exit:** WebOS downloads FireCraft v0.3.2 or a later approved release directly from GitHub, verifies the full package, runs it in an isolated sandbox through a versioned capability protocol, preserves app data, and can restore the previous version offline. A hostile frame cannot access saved FireCraft documents.
