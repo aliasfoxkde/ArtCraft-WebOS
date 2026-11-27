@@ -15,8 +15,7 @@ you complete them.
    `git status` — see what (if anything) moved since this doc was written;
    if commits exist that POST-date 2026-10-15, read them before trusting
    this file's numbers.
-2. `cd webos && npm run ci` — if this is not green, fixing it outranks
-   everything else in this document.
+2. Run the local lint/coverage/build shortcut (`cd webos && npm run ci`) and inspect the exact GitHub Actions workflow for additional required gates. As of the 2026-11-27 audit, npm run ci does NOT include Aegis, ShellCheck, docs/contrast or the browser sweep; do not treat it alone as the full release gate.
 3. Skim `docs/planning/PROGRESS.md` (status board) and the phase list
    below; update PROGRESS.md's snapshot date as soon as you touch anything.
 4. Skim `docs/planning/SESSIONS.md` (last two entries) for how the
@@ -35,6 +34,7 @@ you complete them.
    `## Module index` is machine-enforced; keep it in sync or CI fails).
 4. `docs/planning/QUALITY-PROGRAM.md` — the quality program record: what
    was fixed, what was triaged, what is deliberately closed.
+5. `docs/planning/FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md` — FireCraft local package, sandbox, host protocol, update and rollback plan.
 5. `docs/planning/HISTORY.md`, `SESSIONS.md`, `PROGRESS.md` — what shipped,
    what happened, where things stand.
 
@@ -110,9 +110,8 @@ you complete them.
 2. `cd webos && npm run ci` — must be green.
 3. If UI changed: `node packaging/e2e/webos-sweep.mjs` from the repo root
    (builds are already fresh from step 2; the sweep exits 2 if
-   `webos/dist/index.html` is missing) — expect `PASS (27/27 …, 0 errors)`
-   and eyeball the new screenshots in `$SWEEP_SHOTS`. The same sweep runs as
-   a **hard gate** in GitHub Actions; a red sweep is a stop, not a note.
+   `webos/dist/index.html` is missing) — expect `PASS (31/31 …, 0 errors)`
+   and eyeball the new screenshots in `$SWEEP_SHOTS`. The sweep is a required hosted CI gate. Some deployed FireCraft checks may skip if the external URL is unavailable; those are not a substitute for the required local package fixture planned in H12.
 4. Commit (conventions above) and push; watch Actions
    (`gh run watch $(gh run list --limit 1 --json databaseId --jq '.[0].databaseId')`).
 5. If the change is user-facing → release (phase H6 checklist), deploy,
