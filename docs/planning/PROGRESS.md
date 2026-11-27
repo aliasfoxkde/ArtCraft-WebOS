@@ -44,19 +44,14 @@ of every working session. Plan-of-record for open work:
       workflow, branch-coverage ratchet trial, P16.3 accessibility audit
       beyond contrast.
 - [ ] **H1** Routine-change loop — standing procedure, apply per change.
+- [ ] **H8–H12** FireCraft local WASM package runtime, protocol security, package install/update/rollback and release-gate hardening. See [FireCraft WASM Package Runtime Handoff](FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md); WebOS work stays in this repository, FireCraft editor work stays in its repository.
 - [x] **H2** FireCraft: H2.0–H2.6 complete — v0.2.1 deployed, v3.17.0 shipped.
       H2.1 contract documented; H2.2 postToApp correlate implemented; H2.3
       autosave (applied→exportDocument→filePut, ready→fileGet→openDocument);
       H2.4 open-with via Files context menu; H2.5 exportPng→Photos and
       export-to-Files (shared SaveDialog component, 2026-10-19); H2.6 E2E probe
       open→apply→exportDocument round-trip verified.
-- [ ] **H3** Upstream adoption watch — H3.1 FireCraft app mark swap when
-      upstream ships one (waiting on aliasfoxkde/FireCraft#2, still open
-      2026-10-25). All twelve apps were re-adopted 2026-10-25 (P13, v3.23.0);
-      SolidCraft joined as the thirteenth 2026-11-02 (v3.25.0); the watch
-      continues for the next upstream release of any app. H3.3 registry
-      audit holds — pinned by
-      `tests/registry-versions.test.js`.
+- [ ] **H3** Upstream adoption watch — maintain app ownership/asset pins and validate new upstream releases. The existing FireCraft registry/fetch/injection pin is 0.2.3, while FireCraft-CraftAnything-Experiment has published v0.3.2 (2026-11-27). Update only through the H8 package-integrity and host-compatibility path; the current registry-versions test proves internal consistency, not upstream freshness. The icon/mark question remains separate from package versioning.
 - [x] **P9** Future-work items — P9.1 and P9.5 closed with the craft-app
       upgrade (2026-10-22); P9.2 preview server pinned to 127.0.0.1;
       P9.3 the sweep asserts internal state (window registry + IndexedDB);
@@ -84,7 +79,7 @@ of every working session. Plan-of-record for open work:
       export-to-Files path got component-level tests, and the E2E sweep's
       FireCraft open-with phase was repaired (it imported a module URL the
       production build does not serve) — the sweep is green 27/27.
-- [x] **H6** Releases — v3.18.0 shipped 2026-10-19 (its gate was red; fixed in v3.19.0), v3.19.0 shipped 2026-10-20 with a green gate, v3.20.0 shipped 2026-10-21 (FireCraft v0.2.2 sync, coverage sprint, Aegis gate repaired), v3.21.0 shipped 2026-10-22 (all craft apps upgraded to their current upstream releases; R2 publish automated), v3.22.0 shipped 2026-10-24 (reproducible Aegis baseline, Dependabot, e2e shell-state assertions, os/db error-path coverage), v3.22.1 shipped 2026-10-25 (e2e DevTools-port timeout fix), v3.23.0 shipped 2026-10-25 (all twelve craft apps upgraded to current upstream releases — P13), v3.24.0 shipped 2026-11-01 (e2e sweep hardening), v3.25.0 shipped 2026-11-02 via the automated tag-push release workflow (#25) — first release cut through CI (same-origin proxy removal #26 closing #12; Snippet + CastCraft; store fifth wave; SolidCraft as the thirteenth craft app #27; SW-cache version pinned to src/version.js #30 after the release's missed sw.js bump). Checklist in HANDOFF.md.
+- [x] **H6** Releases — latest observed WebOS release is v3.25.0 (published 2026-11-03); prior release history and automation details remain in HANDOFF.md / HISTORY.md. The latest inspected main CI receipt is run 45096495247 on main SHA d08d2d11f6c546cf94f786f8f409b846a0549c60 (2026-11-23). This is not a receipt for any future package-runtime changes.
 
 ## Deliberately closed (do not reopen without new evidence)
 
@@ -106,3 +101,19 @@ of every working session. Plan-of-record for open work:
 | R1 | H3.1 blocked on FireCraft upstream shipping an official app icon (aliasfoxkde/FireCraft#2) | WebOS uses a code-drawn placeholder for FireCraft; official mark unavailable until upstream ships one | Swap script ready; upstream issue filed with exact requirements | ACCEPTED — placeholder glyph is the permanent design (2026-10-19) |
 | R2 | Coverage ratchet was set from a non-reproducible local measurement (2026-10-19) | Every push from 594e579 to 7a6e12c had a red CI; v3.18.0 shipped with a failing gate and the release notes/progress board wrongly claimed CI was green | Root cause found (timer-dependent coverage); `tests/clock-timers.test.jsx` pins the metric; floors now sit a fixed tolerance below a measured value two consecutive runs agree on | RESOLVED 2026-10-20 |
 | R3 | The Aegis CI step added 2026-10-20 never scanned anything: nonexistent `setup-python` SHA, wrong tool (the PyPI `aegis-cli` is an unrelated project), nonexistent `--format github`, and a baseline built by a different aegis version (8 categories vs 22) whose fingerprints matched nothing | The security gate was reported as wired but was in fact dead — the repo was unscanned in CI while the progress board claimed a scan ran | `packaging/aegis-scan.sh` pins the real scanner (aliasfoxkde/aegis v0.6.4) with a verified checksum; the baseline was regenerated with that binary; a negative control (injected AWS key) proves the gate fails on new findings | RESOLVED 2026-10-21 |
+
+
+## Audit addendum — 2026-11-27
+
+Repository source inspected at main SHA d08d2d11f6c546cf94f786f8f409b846a0549c60. Latest inspected successful main CI run: 45096495247, dated 2026-11-23. It reported 95 test files / 1,475 Vitest tests passing and a 31/31 browser sweep. The configured four-metric coverage floors passed. This is historical CI evidence, not a fresh run on any future runtime changes.
+
+### Current cross-project findings
+
+- WebOS FireCraft registry/fetch/PWA injection pins are all 0.2.3. FireCraft's separate repository published v0.3.2 on 2026-11-27. The current registry-versions test verifies that the three WebOS literals agree; it does not check upstream release freshness or a package digest.
+- FireCraft-specific iframe message handling validates event.source but does not validate event.origin before accepting ready/applied/export control messages. The generic bridge does validate origin. The host-to-app postToApp path uses wildcard target origin. A frame navigation could potentially spoof ready, trigger autosave restore, and receive local document bytes. Fix and add a hostile-navigation regression test before local package execution.
+- The current release workflow reruns lint, coverage and build but does not rerun all PR CI gates (Aegis, ShellCheck, docs/contrast and browser sweep). A tag release must use the same reusable exact-SHA quality workflow.
+- webos-sweep includes FireCraft live-deployment checks that can skip when the external deployment is unreachable. Keep those probes separate from a required deterministic local-package integration fixture.
+- CI logs showed nested-button validateDOMNesting and act-environment warnings. Files tiles contain outer button controls with inner action buttons. Fix the invalid interactive nesting and make unexpected warnings fail tests.
+- npm run ci currently runs lint, coverage and build, not every hosted CI gate. Provide explicit quick/full modes and fail closed for release validation.
+
+The implementation status of these findings is tracked in H8–H12 of HANDOFF.md and the linked FireCraft WASM Package Runtime Handoff. Do not mark the package migration complete merely because the registry version was changed.
