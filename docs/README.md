@@ -26,7 +26,7 @@ Nothing in this file requires scrolling past an index.
 
 | Page | What it covers |
 |---|---|
-| [Craft app registry](reference/craft-apps.md) | Versions, sources, deploy routes for all twelve apps |
+| [Craft app registry](reference/craft-apps.md) | Versions, sources, package types and deploy routes for the current app catalog |
 | [Attribution](ATTRIBUTION.md) | Every third-party asset and its license |
 | [Liquid Glass design](planning/webos-apps/LIQUID-GLASS.md) | Design-language research + phased plan |
 
@@ -35,6 +35,7 @@ Nothing in this file requires scrolling past an index.
 - [Product vision and roadmap](planning/product-vision.md) — current scope,
   explicit gaps, and staged path toward a user-owned desktop environment.
 - [FireCraft WASM Package Runtime Handoff](planning/FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md) — separate-repository package, sandbox, host API, update and rollback plan.
+- [FireCraft WASM Package Runtime Handoff](planning/FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md) — FireCraft package, sandbox, host API and rollback plan.
 - [planning/](planning/) — plan of record: [HANDOFF.md](planning/HANDOFF.md)
   (continuation context), [PROGRESS.md](planning/PROGRESS.md) (status board),
   [PHASES.md](planning/PHASES.md) (work plan), [SESSIONS.md](planning/SESSIONS.md),
