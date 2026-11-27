@@ -34,6 +34,7 @@ Nothing in this file requires scrolling past an index.
 
 - [Product vision and roadmap](planning/product-vision.md) — current scope,
   explicit gaps, and staged path toward a user-owned desktop environment.
+- [FireCraft WASM Package Runtime Handoff](planning/FIRECRAFT-WASM-PACKAGE-AND-RUNTIME-HANDOFF-2026-11-27.md) — separate-repository package, sandbox, host API, update and rollback plan.
 - [planning/](planning/) — plan of record: [HANDOFF.md](planning/HANDOFF.md)
   (continuation context), [PROGRESS.md](planning/PROGRESS.md) (status board),
   [PHASES.md](planning/PHASES.md) (work plan), [SESSIONS.md](planning/SESSIONS.md),
