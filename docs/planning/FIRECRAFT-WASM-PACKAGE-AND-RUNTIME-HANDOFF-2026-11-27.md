@@ -546,7 +546,8 @@ These scenarios require both repositories but must be implemented and validated 
 
 ### FireCraft integration references
 - FireCraft v0.3.2 GitHub Release: https://github.com/aliasfoxkde/FireCraft-CraftAnything-Experiment/releases/tag/v0.3.2
-- FireCraft host integration roadmap: https://github.com/aliasfoxkde/FireCraft-CraftAnything-Experiment/blob/main/docs/QUALITY-AND-WEBOS-ROADMAP-2026-11-27.md
+- FireCraft host integration roadmap: https://github.com/aliasfoxkde/FireCraft-CraftAnything-Experiment/blob/docs/quality-and-webos-roadmap-2026-11-27/docs/QUALITY-AND-WEBOS-ROADMAP-2026-11-27.md
+- FireCraft proposed Rust/WASM protocol contract: https://github.com/aliasfoxkde/FireCraft-CraftAnything-Experiment/blob/docs/quality-and-webos-roadmap-2026-11-27/docs/WEBOS-HOST-INTEGRATION.md
 - Current FireCraft WASM package asset: firecraft-v0.3.2-wasm32-web.zip.
 
 **Completion rule:** do not call this a “local FireCraft app” merely because the ZIP was cached. It is complete only when the package is verified, sandboxed, capability-limited, host-compatible, updateable, downgradeable, and tested against hostile navigation and offline failure.
